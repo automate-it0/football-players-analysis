@@ -1,7 +1,12 @@
-<p align="center">
-  <h1>QA-Football-Players-Analysis</h1>
-  <p><strong>OpenScout AI Pro</strong> - الكشاف الرقمي الذكي لتحليل لاعبي كرة القدم</p>
-</p>
+# ⚽ OpenScout AI Pro — Football Players Analysis
+
+**الكشاف الرقمي الذكي لتحليل لاعبي كرة القدم**
+
+[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![StatsBomb](https://img.shields.io/badge/Data-StatsBomb_Open_Data-1f77b4)](https://github.com/statsbomb/open-data)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 ---
 
@@ -20,10 +25,20 @@
 - **نظام حماية من التكرار**: كاشف ذكي يمنع التكرار اللانهائي في ردود الذكاء الاصطناعي
 - **بناء تلقائي لقاعدة البيانات**: تُبنى قاعدة البيانات تلقائياً عند أول تشغيل إذا لم تكن موجودة
 
+## خط أنابيب الـ RAG (Retrieval-Augmented Generation)
+
+يعمل الشات بوت الكشفي وفق خط أنابيب من خمس مراحل يضمن أن كل إجابة مبنية على بيانات حقيقية:
+
+1. **تصنيف السؤال** — تحليل كلمات المستخدم لتحديد هدف الاستعلام (سرعة / إنهاء / ضغط / صناعة لعب)
+2. **استرجاع البيانات** — استعلام SQL على جدول `players_scouting_data` في SQLite واستخراج أفضل 3 لاعبين مطابقين
+3. **بناء السياق** — تحويل أرقام اللاعبين إلى نص يُغذّى للنموذج
+4. **التوليد** — نموذج Qwen2.5 المحلي (عبر OpenVINO) يصيغ الرد بالعربية مع تعليمات صريحة بعدم اختراع أسماء أو أرقام
+5. **حماية من التكرار** — دالة `clean_repetitions` تقطع أي حلقات تكرار لانهائية في مخرجات النموذج
+
 ## هيكل المشروع
 
 ```
-QA-football-players-analisis/
+football-players-analisis/
 ├── app.py                  # خادم FastAPI الرئيسي + واجهة الويب + واجهات API
 ├── data_engine.py          # محرك البيانات: استيراد CSV، دمج، حساب المقاييس، بناء قاعدة البيانات
 ├── qwen_server.py          # خادم نموذج Qwen2.5 المحلي (OpenVINO)
@@ -36,14 +51,11 @@ QA-football-players-analisis/
 │   ├── ea_fc26_goalkeepers.csv      # بيانات حراس المرمى FC 26
 │   └── oyuncular.csv                # قاعدة بيانات إضافية
 │
-├── database/               # قاعدة البيانات
-│   └── openscout_database.db.bak    # نسخة احتياطية (يُنشأ تلقائياً openscout_database.db عند التشغيل)
+├── database/               # قاعدة البيانات (تُنشأ تلقائياً عند أول تشغيل)
+│   └── openscout_database.db
 │
 ├── tests/                  # الاختبارات
 │   └── harsh_tests.py              # مجموعة اختبارات صارمة (سلامة DB، استقرار API، كشف التكرار)
-│
-└── docs/                   # الوثائق
-    └── AGENTS.md                    # مواصفات الوكلاء
 ```
 
 ## التثبيت والتشغيل
@@ -56,7 +68,7 @@ QA-football-players-analisis/
 
 1. **استنساخ المشروع وفتح المجلد:**
    ```bash
-   cd QA-football-players-analisis
+   cd football-players-analisis
    ```
 
 2. **تثبيت المكتبات المطلوبة:**
@@ -150,7 +162,15 @@ python tests/harsh_tests.py
 
 ---
 
+## 📄 الترخيص
+
+هذا المشروع مرخّص بموجب [رخصة MIT](./LICENSE).
+
+بيانات StatsBomb المستخدمة خاضعة لبنود [StatsBomb Open Data Licence](https://github.com/statsbomb/open-data/blob/master/LICENSE.pdf).
+
+---
+
 <div align="center">
-  <p><strong>تم صنعه بواسطة qa orders owner</strong></p>
-  <p>OpenScout AI Pro &copy; 2025</p>
+  <p><strong>تم صنعه بواسطة <a href="https://github.com/automate-it0">Ziad Kishk</a></strong></p>
+  <p>OpenScout AI Pro</p>
 </div>
